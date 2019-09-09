@@ -1,0 +1,51 @@
+---
+####################
+# Load Certificates
+####################
+
+- name: Create kubernetes data dir
+  file: path=/var/lib/kubernetes state=directory
+  become: true
+
+- name: Copy certificates
+  copy:
+    src: "{{ playbook_dir }}/../cert/{{ item }}"
+    dest: /var/lib/kubernetes
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - ca.pem
+    - kubernetes.pem
+    - kubernetes-key.pem
+  become: true
+
+
+#############
+# Kubernetes
+#############
+
+- name: Install kubeadm kubelet kubectl
+  shell: |
+    apt-get update && apt-get install -y apt-transport-https curl
+    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+    cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+    deb https://apt.kubernetes.io/ kubernetes-xenial main
+    EOF
+    apt-get update
+    apt-get install -y kubelet kubeadm kubectl
+    apt-mark hold kubelet kubeadm kubectl
+  become: true
+
+- name: Initialize the control plane
+  command: "kubeadm init --config={{ item }} --upload-certs" 
+  with_items:
+    - kubeadm-config.yaml
+  become: true
+
+- name: Configure CNI
+  command: kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+  become: true
+
+- name: Rest of control plane nodes
+  command: kubeadm join {{controller0_ip}}:6443 --token {{token}} --discovery-token-ca-cert-hash {{ca-cert}}  --control-plane --certificate-key {{key}} 
