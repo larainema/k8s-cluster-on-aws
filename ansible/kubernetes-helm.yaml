@@ -1,0 +1,26 @@
+---
+
+#######################################
+# Install and Configure Helm
+#######################################
+
+# Expects kubectl being configured on the local machine
+# using kubectl.yaml playbook
+
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: Download Helm binary
+    command: "wget https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz"
+
+  - name: Unpack the file
+    command: "tar -zxvf helm-v2.14.3-linux-amd64.tar.gz"
+
+  - name: Move binary to the destination
+    command: "mv linux-amd64/helm /usr/local/bin/helm"
+
+  - name: Initialize Helm
+    command: "helm init --history-max 200"

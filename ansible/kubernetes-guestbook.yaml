@@ -1,0 +1,35 @@
+---
+
+#######################################
+# Deploy and expose Guset Book
+#######################################
+
+# Expects kubectl being configured on the local machine
+# using kubectl.yaml playbook
+
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: Create development namespace
+    command: "kubectl create namespace development"
+
+  - name: Creating the Redis Master Deployment
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml"
+
+  - name: Creating the Redis Master Service
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml"
+
+  - name: Creating the Redis Slave Deployment
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml"
+
+  - name: Creating the Redis Slave Service
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml"
+
+  - name: Creating the Guestbook Frontend Deployment
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml"
+
+  - name: Creating the Frontend Service
+    command: "kubectl apply -n development -f https://k8s.io/examples/application/guestbook/frontend-service.yaml"
