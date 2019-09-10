@@ -1,0 +1,25 @@
+---
+
+#######################################################################
+# Install and Configure Logging with Elasticsearch, Kibana, and Fluentd
+#######################################################################
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: Create a logging namespace
+    command: "kubectl create namespace logging"
+
+  - name: Install Elasticsearch
+    command: "kubectl create -f elastic.yaml -n logging"
+
+  - name: Install Kibana
+    command: "kubectl create -f kibana.yaml -n logging"
+
+  - name: Install Fluentd
+    command: "kubectl create -f fluentd-rbac.yaml"
+
+  - name: Install Fluentd daemonset
+    command: "kubectl create -f kubernetes/fluentd-daemonset.yaml"

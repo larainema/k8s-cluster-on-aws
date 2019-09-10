@@ -26,3 +26,6 @@
 
   - name: Create Prometheus Services
     command: "kubectl create -f prometheus-service.yaml --namespace=monitoring"
+
+  - name: Install Grafana
+    command: "wget https://dl.grafana.com/oss/release/grafana_6.3.5_amd64.deb && sudo dpkg -i grafana_6.3.5_amd64.deb"
