@@ -1,0 +1,28 @@
+---
+
+#######################################
+# Install and Configure Prometheus
+#######################################
+
+- hosts: localhost
+  connection: local
+
+  tasks:
+
+  - name: Create a monitoring namespace
+    command: "kubectl create namespace monitoring"
+
+  - name: Create Role
+    command: "kubectl create -f clusterRole.yaml"
+
+  - name: Create config map
+    command: "kubectl create -f config-map.yaml -n monitoring"
+
+  - name: Create Prometheus Deployment
+    command: "kubectl create -f prometheus-deployment.yaml --namespace=monitoring"
+
+  - name: Check Prometheus Deployment
+    command: "kubectl get deployments --namespace=monitoring"
+
+  - name: Create Prometheus Services
+    command: "kubectl create -f prometheus-service.yaml --namespace=monitoring"

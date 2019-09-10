@@ -1,0 +1,21 @@
+---
+
+#######################################
+# Install and Configure Jenkins
+#######################################
+
+- hosts: controller0_ip
+
+  tasks:
+
+  - name: Add repo key
+    command: "wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -"
+
+  - name: Edit sources.list
+    command: "echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list"
+
+  - name: Install Jenkins
+    command: "sudo apt-get -y update & sudo apt-get install -y jenkins"
+
+  - name: Start Jenkins
+    command: "sudo systemctl start jenkins"
