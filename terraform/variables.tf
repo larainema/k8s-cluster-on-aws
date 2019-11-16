@@ -37,7 +37,7 @@ variable region {
 }
 
 variable zone {
-  default = "eu-east-2a"
+  default = "us-east-2a"
 }
 
 variable vpc_cidr {

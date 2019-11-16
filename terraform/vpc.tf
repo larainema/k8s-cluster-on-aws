@@ -13,7 +13,7 @@ resource "aws_vpc" "kubernetes" {
 }
 
 resource "aws_vpc_dhcp_options" "dns_resolver" {
-  domain_name = "${region}.compute.internal"
+  domain_name = "${var.region}.compute.internal"
   domain_name_servers = ["AmazonProvidedDNS"]
 
   tags {
